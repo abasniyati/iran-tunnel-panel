@@ -8,7 +8,7 @@ BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
 # Configuration
-GITHUB_REPO="https://raw.githubusercontent.com/YOUR_USERNAME/iran-tunnel-panel/main"
+GITHUB_REPO="https://raw.githubusercontent.com/abasniyati/iran-tunnel-panel/main"
 BACKHAUL_VERSION="0.6.5"
 BACKHAUL_URL="https://github.com/Musixal/Backhaul/releases/download/v${BACKHAUL_VERSION}/backhaul_linux_amd64.tar.gz"
 INSTALL_DIR="/opt/tunnel-panel"
