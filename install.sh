@@ -129,83 +129,33 @@ EOF
     # Download web panel files
     echo -e "${YELLOW}دانلود فایل‌های وب پنل...${NC}"
     download_panel_files
+download_panel_files() {
+    set -e
+    echo -e "${YELLOW}دانلود فایل‌های پنل...${NC}"
 
-    # Create systemd services
-    create_systemd_services "iran"
+    mkdir -p "$INSTALL_DIR/web/templates"
+    mkdir -p "$INSTALL_DIR/web/static"
 
-    # Setup web panel
-    setup_web_panel
+    local BASE_URL="https://raw.githubusercontent.com/abasniyati/iran-tunnel-panel/main"
 
-    # Start services
-    systemctl daemon-reload
-    systemctl enable tunnel-panel
-    systemctl start tunnel-panel
+    curl -fLsS "$BASE_URL/app.py" \
+      -o "$INSTALL_DIR/web/app.py"
 
-    # Get server IP
-    SERVER_IP=$(curl -s ifconfig.me)
+    curl -fLsS "$BASE_URL/templates/index.html" \
+      -o "$INSTALL_DIR/web/templates/index.html"
 
-    echo -e "\n${GREEN}═══════════════════════════════════════${NC}"
-    echo -e "${GREEN}✓ نصب سرور ایران با موفقیت انجام شد!${NC}"
-    echo -e "${GREEN}═══════════════════════════════════════${NC}"
-    echo -e "\n${YELLOW}اطلاعات دسترسی:${NC}"
-    echo -e "وب پنل: ${BLUE}http://$SERVER_IP:$WEB_PORT${NC}"
-    echo -e "یوزرنیم: ${BLUE}admin${NC}"
-    echo -e "پسورد: ${BLUE}admin123${NC}"
-    echo -e "\n${RED}⚠️  حتماً پسورد را در پنل تغییر دهید!${NC}"
-    echo -e "\n${YELLOW}توکن امنیتی (برای سرور خارج):${NC}"
-    echo -e "${BLUE}$SECURITY_TOKEN${NC}"
-    echo -e "\n${YELLOW}دستورات مدیریت:${NC}"
-    echo -e "مشاهده وضعیت: ${BLUE}systemctl status tunnel-panel${NC}"
-    echo -e "ری‌استارت: ${BLUE}systemctl restart tunnel-panel${NC}"
-    echo -e "مشاهده لاگ‌ها: ${BLUE}journalctl -u tunnel-panel -f${NC}"
-}
+    curl -fLsS "$BASE_URL/templates/login.html" \
+      -o "$INSTALL_DIR/web/templates/login.html"
 
-# Function: Setup Foreign Server
-setup_foreign_server() {
-    echo -e "\n${BLUE}═══════════════════════════════════════${NC}"
-    echo -e "${BLUE}   نصب سرور خارج (Foreign Server)${NC}"
-    echo -e "${BLUE}═══════════════════════════════════════${NC}\n"
-
-    # Get configuration
-    read -p "پورت گوش‌دهی برای اتصالات ایران [8080]: " LISTEN_PORT
-    LISTEN_PORT=${LISTEN_PORT:-8080}
-
-    read -p "رمز عبور امنیتی (همان توکن سرور ایران): " SECURITY_TOKEN
-
-    read -p "آیا X-UI نصب است؟ (y/n) [y]: " HAS_XUI
-    HAS_XUI=${HAS_XUI:-y}
-
-    XUI_PORT=54321
-    XUI_USERNAME=""
-    XUI_PASSWORD=""
-
-    if [[ "$HAS_XUI" == "y" || "$HAS_XUI" == "Y" ]]; then
-        read -p "پورت X-UI [54321]: " XUI_PORT
-        XUI_PORT=${XUI_PORT:-54321}
-        read -p "یوزرنیم X-UI: " XUI_USERNAME
-        read -sp "پسورد X-UI: " XUI_PASSWORD
-        echo
-    fi
-
-    # Create directories
-    mkdir -p "$INSTALL_DIR/config"
-    mkdir -p "$INSTALL_DIR/logs"
-
-    # Save config
-    cat > "$INSTALL_DIR/config/config.json" <<EOF
-{
-    "server_type": "foreign",
-    "listen_port": $LISTEN_PORT,
-    "security_token": "$SECURITY_TOKEN",
-    "agent_port": $AGENT_PORT,
-    "xui_enabled": $([ "$HAS_XUI" == "y" ] && echo "true" || echo "false"),
-    "xui_port": $XUI_PORT,
-    "xui_username": "$XUI_USERNAME",
-    "xui_password": "$XUI_PASSWORD",
-    "inbounds": []
-}
+    cat > "$INSTALL_DIR/web/requirements.txt" <<'EOF'
+flask>=2.3.0
+flask-cors>=4.0.0
+requests>=2.31.0
+psutil>=5.9.0
 EOF
 
+    echo -e "${GREEN}✓ فایل‌های پنل دریافت شدند${NC}"
+}
     # Download agent files
     echo -e "${YELLOW}دانلود فایل‌های Agent...${NC}"
     download_agent_files
