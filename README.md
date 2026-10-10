@@ -328,7 +328,7 @@ MIT License
 برای سوالات و مشکلات:
 
 - Telegram: @YourChannel
-- GitHub Issues: [لینک]
+
 
 ---
 
