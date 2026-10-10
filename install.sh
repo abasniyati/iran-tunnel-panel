@@ -215,55 +215,54 @@ EOF
 }
 
 # Function: Download agent files
+download_panel_files() {
+    set -e
+    echo -e "${YELLOW}دانلود فایل‌های پنل...${NC}"
+
+    mkdir -p "$INSTALL_DIR/web/templates" "$INSTALL_DIR/web/static"
+
+    curl -fLsS "$GITHUB_REPO/app.py" \
+      -o "$INSTALL_DIR/web/app.py"
+
+    curl -fLsS "$GITHUB_REPO/templates/templates_index.html.html" \
+      -o "$INSTALL_DIR/web/templates/index.html"
+
+    curl -fLsS "$GITHUB_REPO/templates/templates_login.html.html" \
+      -o "$INSTALL_DIR/web/templates/login.html"
+
+    cat > "$INSTALL_DIR/web/requirements.txt" <<'EOF'
+flask>=2.3.0
+flask-cors>=4.0.0
+requests>=2.31.0
+psutil>=5.9.0
+EOF
+
+    test -s "$INSTALL_DIR/web/app.py"
+    test -s "$INSTALL_DIR/web/templates/index.html"
+    test -s "$INSTALL_DIR/web/templates/login.html"
+
+    echo -e "${GREEN}✓ فایل‌های واقعی پنل دریافت شدند${NC}"
+}
+
 download_agent_files() {
+    set -e
+    echo -e "${YELLOW}دانلود فایل‌های Agent...${NC}"
+
     mkdir -p "$INSTALL_DIR/agent"
-    cd "$INSTALL_DIR/agent"
 
-    # We'll create these files in the next steps
-    touch agent.py requirements.txt
+    curl -fLsS "$GITHUB_REPO/agent.py" \
+      -o "$INSTALL_DIR/agent/agent.py"
+
+    cat > "$INSTALL_DIR/agent/requirements.txt" <<'EOF'
+flask>=2.3.0
+requests>=2.31.0
+psutil>=5.9.0
+EOF
+
+    test -s "$INSTALL_DIR/agent/agent.py"
+
+    echo -e "${GREEN}✓ فایل واقعی Agent دریافت شد${NC}"
 }
-
-# Function: Setup web panel
-setup_web_panel() {
-    echo -e "${YELLOW}راه‌اندازی وب پنل...${NC}"
-
-    cd "$INSTALL_DIR/web"
-
-    # Create virtual environment
-    python3 -m venv venv
-    source venv/bin/activate
-
-    # Install requirements
-    pip install -q --upgrade pip
-    pip install -q flask flask-cors requests psutil
-
-    deactivate
-
-    echo -e "${GREEN}✓ وب پنل راه‌اندازی شد${NC}"
-}
-
-# Function: Setup agent
-setup_agent() {
-    echo -e "${YELLOW}راه‌اندازی Agent...${NC}"
-
-    cd "$INSTALL_DIR/agent"
-
-    # Create virtual environment
-    python3 -m venv venv
-    source venv/bin/activate
-
-    # Install requirements
-    pip install -q --upgrade pip
-    pip install -q flask requests psutil
-
-    deactivate
-
-    echo -e "${GREEN}✓ Agent راه‌اندازی شد${NC}"
-}
-
-# Function: Create systemd services
-create_systemd_services() {
-    local server_type=$1
 
     if [ "$server_type" == "iran" ]; then
         # Web Panel Service
