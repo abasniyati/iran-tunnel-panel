@@ -26,7 +26,7 @@
 ### نصب سرور ایران (Iran Server)
 
 ```bash
-bash <(curl -fsSL https://raw.githubusercontent.com/YOUR_USERNAME/iran-tunnel-panel/main/install.sh)
+bash <(curl -fsSL https://raw.githubusercontent.com/abasniyati/iran-tunnel-panel/main/install.sh)
 ```
 
 سپس گزینه **1** را انتخاب کنید.
@@ -34,7 +34,7 @@ bash <(curl -fsSL https://raw.githubusercontent.com/YOUR_USERNAME/iran-tunnel-pa
 ### نصب سرور خارج (Foreign Server)
 
 ```bash
-bash <(curl -fsSL https://raw.githubusercontent.com/YOUR_USERNAME/iran-tunnel-panel/main/install.sh)
+bash <(curl -fsSL https://raw.githubusercontent.com/abasniyati/iran-tunnel-panel/main/install.sh)
 ```
 
 سپس گزینه **2** را انتخاب کنید.
